@@ -1,6 +1,6 @@
 # Title: Python - Download media from a reddit user
 # Description: Download Media that a reddit user posted.
-# More info: https://alteredadmin.github.io/posts/
+# More info: https://alteredadmin.github.io/posts/python-download-media-from-a-reddit-user/
 # =====================================================
 # Name: Altered Admin
 # Website: https://alteredadmin.github.io/
