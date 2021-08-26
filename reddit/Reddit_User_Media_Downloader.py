@@ -1,6 +1,6 @@
-# Title: Python - Download media from Subreddit
-# Description: Download Media Posted to a Subreddit
-# More info: https://alteredadmin.github.io/posts/python-download-media-from-subreddit/
+# Title: Python - Download media from a reddit user
+# Description: Download Media that a reddit user posted.
+# More info: https://alteredadmin.github.io/posts/
 # =====================================================
 # Name: Altered Admin
 # Website: https://alteredadmin.github.io/
@@ -23,23 +23,33 @@ reddit = praw.Reddit(client_id='',
 
 now = datetime.datetime.now()
 
-subs = [""]
+users = [""]
 
-# here can you set what domains you want to download from.
-# This list is short because there is not many external domains that get posted to reddit
+# Here can you set what domains you want to download from.
+# This list is short because there is not many external domains that get posted to reddit for media
+for each in users:
+    bio = reddit.redditor(each).subreddit["public_description"]
+    print(bio)
+    karma = reddit.redditor(each).link_karma
+    print(karma)
+
 imgs = ('https://i.redd.it', 'https://i.imgur.com')
-vids = ('https://gfycat.com')
+vids = ('https://gfycat.com'
 
-wd = os.path.join(os.environ.get("HOME"), "Downloads", "stuffs", '')
+wd = os.path.join(os.path.expanduser("~"), "Downloads", "stuffs", "~users", '')
+# all = reddit.subreddit(user).new(limit=100000)
+# path = os.path.join(wd, user, '')
+# ytdl = path + "%(title)s-%(id)s.%(ext)s"
 
 print()
 print(now.year, now.month, now.day, now.hour, now.minute, now.second)
 print()
 
-
 def img_getter(all):
+    #marker
     try:
         os.mkdir(path)
+    # print("Directory '% s' created" % directory)
     except OSError:
         print("Creation of the directory %s failed or already exists" % path)
     else:
@@ -49,6 +59,7 @@ def img_getter(all):
         if str(post.url).startswith(imgs):
             try:
                 subprocess.run(["wget", "-nc", "-P", path, post.url])
+                # wg = wget.download(post.url, path)
             except:
                 break
         elif str(post.url).startswith(vids):
@@ -56,12 +67,12 @@ def img_getter(all):
             # subprocess.run(["youtube-dl", "-i", "-o", ytdl, post.url])
             subprocess.run(["youtube-dl", "-i", "--playlist-end", "1", "-o", ytdl, post.url])
 
-for sub in subs:
-    path = os.path.join(wd, sub, '')
+
+for user in users:
+    path = os.path.join(wd, user, '')
     ytdl = path + "%(title)s-%(id)s.%(ext)s"
-    print(sub)
     print('Getting new')
-    img_getter(reddit.subreddit(sub).hot(limit=None))
-    img_getter(reddit.subreddit(sub).new(limit=None))
-    img_getter(reddit.subreddit(sub).top(limit=None))
-    img_getter(reddit.subreddit(sub).controversial(limit=None))
+    img_getter(reddit.redditor(user).submissions.new(limit=None))
+    # print('Getting Hot')
+    img_getter(reddit.redditor(user).submissions.hot(limit=None))
+    img_getter(reddit.redditor(user).top(limit=None))
